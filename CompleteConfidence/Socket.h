@@ -36,11 +36,11 @@
 
 class _LEFT_SOCKET_CURRENCY {
 protected:
-	_LEFT_SOCKET_CURRENCY() {}
-	//virtual int InitializeSocket() = 0;
-	//virtual void CleanSocket() = 0;
-	short						port;
-	long						ip;
+    _LEFT_SOCKET_CURRENCY() {}
+    //virtual int InitializeSocket() = 0;
+    //virtual void CleanSocket() = 0;
+    short						port;
+    long						ip;
 };
 
 #ifdef CC_OS_WIN
@@ -50,10 +50,10 @@ protected:
 #define LeftCloseSocket			closesocket
 class LeftSocketWin :public _LEFT_SOCKET_CURRENCY {
 public:
-	static int	InitializeSocket() {
-		WSADATA	wsa; return WSAStartup(MAKEWORD(2, 2), &wsa);
-	}
-	static void CleanSocket() { WSACleanup(); }
+    static int	InitializeSocket() {
+        WSADATA	wsa; return WSAStartup(MAKEWORD(2, 2), &wsa);
+    }
+    static void CleanSocket() { WSACleanup(); }
 };
 typedef LeftSocketWin			LeftSocket;
 typedef SOCKET					LeftSokt;
@@ -70,8 +70,8 @@ typedef int						LeftSoktLen;
 #define LeftCloseSocket			close
 class LeftSocketLinux :public _LEFT_SOCKET_CURRENCY {
 public:
-	static int	InitializeSocket() { return 0; }
-	static void CleanSocket() {  }
+    static int	InitializeSocket() { return 0; }
+    static void CleanSocket() {  }
 };
 typedef LeftSocketLinux			LeftSocket;
 typedef int						LeftSokt;

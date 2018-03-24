@@ -92,11 +92,11 @@ constexpr unsigned long long basis = 0xCBF29CE484222325ull;
 // Funciont support.
 unsigned long long hash_(char const *str);
 constexpr unsigned long long hash_compile_time(
-	char const *str, unsigned long long last_value = basis) {
-	return *str ? hash_compile_time(str + 1, (*str ^ last_value) *prime) : last_value;
+    char const *str, unsigned long long last_value = basis) {
+    return *str ? hash_compile_time(str + 1, (*str ^ last_value) *prime) : last_value;
 }
 constexpr unsigned long long operator"" _hash(char const *p, size_t) {
-	return hash_compile_time(p);
+    return hash_compile_time(p);
 }
 /***************************************************************************************/
 
@@ -106,32 +106,32 @@ constexpr unsigned long long operator"" _hash(char const *p, size_t) {
 #include <iostream>
 class CoutExA {
 public:
-	CoutExA(char const *filename) :m_fout(filename, std::ios::out | std::ios::app) {}
-	template <class T>
-	CoutExA& operator<<(const T &text) {
-		m_fout << text; std::cout << text; return *this;
-	}
-	CoutExA& operator<<(std::basic_ostream<char>& (*fp)(std::basic_ostream<char>&)) {
-		m_fout << fp; std::cout << fp; return *this;
-	}
+    CoutExA(char const *filename) :m_fout(filename, std::ios::out | std::ios::app) {}
+    template <class T>
+    CoutExA& operator<<(const T &text) {
+        m_fout << text; std::cout << text; return *this;
+    }
+    CoutExA& operator<<(std::basic_ostream<char>& (*fp)(std::basic_ostream<char>&)) {
+        m_fout << fp; std::cout << fp; return *this;
+    }
 private:
-	std::ofstream m_fout;
+    std::ofstream m_fout;
 };
 #ifdef LEFT_OS_WIN
 class CoutExW {
 public:
-	CoutExW(const wchar_t *filename) :m_wfout(filename, std::wios::out | std::wios::app) {
-		m_wfout.imbue(std::locale(std::locale("chs"), "", LC_CTYPE));
-	}
-	template <class T>
-	CoutExW& operator<<(const T &text) {
-		m_wfout << text; std::wcout << text; return *this;
-	}
-	CoutExW& operator<<(std::basic_ostream<wchar_t>& (*fp)(std::basic_ostream<wchar_t>&)) {
-		m_wfout << fp; std::wcout << fp; return *this;
-	}
+    CoutExW(const wchar_t *filename) :m_wfout(filename, std::wios::out | std::wios::app) {
+        m_wfout.imbue(std::locale(std::locale("chs"), "", LC_CTYPE));
+    }
+    template <class T>
+    CoutExW& operator<<(const T &text) {
+        m_wfout << text; std::wcout << text; return *this;
+    }
+    CoutExW& operator<<(std::basic_ostream<wchar_t>& (*fp)(std::basic_ostream<wchar_t>&)) {
+        m_wfout << fp; std::wcout << fp; return *this;
+    }
 private:
-	std::wofstream m_wfout;
+    std::wofstream m_wfout;
 };
 #endif
 /***************************************************************************************/
@@ -139,53 +139,53 @@ private:
 // leftName namespace
 namespace leftName {
 #ifdef LEFT_OS_WIN
-	// Show last error message in chinese.
-	extern void ShowLastError();
-	// Get the token.
-	extern void GetToken();
-	// Get self module handle.
-	extern HMODULE GetSelfModuleHandle();
+    // Show last error message in chinese.
+    extern void ShowLastError();
+    // Get the token.
+    extern void GetToken();
+    // Get self module handle.
+    extern HMODULE GetSelfModuleHandle();
 #endif
-	// GetTimeStr(Y-M-D h:m:s)
-	char *GetTimeStr(char *TimeStr, int SizeOfBuf);
-	char *GetTimeStr(char *TimeStr, int SizeOfBuf, int off);
-	// Converts a string command to a half-length hexadecimal string.
-	char *StrToHex(const char *buf, char *Answer, int LenOfAnswer);
-	// Convert a hexadecimal string to double the length of a string.
-	char *HexToStr(
-		const char *order, int LenOfOrder, char *Answer, int LenOfAnswer);
-	// Analysis ini file. Just give a pointer to init function.
-	typedef struct _INI_INFO_LIST {
-		_INI_INFO_LIST		*Next;
-		char				*Key;
-		char				*Value;
-	} IniInfo, *pIniInfo;
-	LEFT_ERROR AnalysisIniFile(char *path, pIniInfo *InfoHead);
-	LEFT_ERROR GetIniInfo(
-		const char *key, char *ValueBuf, int ValueLen, pIniInfo InfoHead);
-	LEFT_ERROR DelIniInfoList(pIniInfo infoList);
-	// Cut the str with interval character.
-	char *getNextOrder(char **buf, char *order, int Len, char SignChar);
-	LEFT_ERROR AddSign(const char *orderBuff, char *buff, char SignChar);
-	// Thread safe list class
-	class ThrSfeList {
-	public:
-		ThrSfeList();
-		ThrSfeList(char *buf, unsigned int len, LeftSimpleLock lock,
-			ThrSfeList *Last, ThrSfeList *Next);
-		~ThrSfeList();
-		unsigned int		GetLast(char *buf, unsigned int len);
-		char				*GetBuf(char *buf, unsigned int len);
-		bool				Add(char *buf, unsigned int len);
-		unsigned int		len;
-	private:
-		LeftSimpleLock		lock;
-		char				*buf;
-		enum				character { Head, boddy, Tail };
-		character			role;
-		ThrSfeList			*Last;
-		ThrSfeList			*Next;
-	};
+    // GetTimeStr(Y-M-D h:m:s)
+    char *GetTimeStr(char *TimeStr, int SizeOfBuf);
+    char *GetTimeStr(char *TimeStr, int SizeOfBuf, int off);
+    // Converts a string command to a half-length hexadecimal string.
+    char *StrToHex(const char *buf, char *Answer, int LenOfAnswer);
+    // Convert a hexadecimal string to double the length of a string.
+    char *HexToStr(
+        const char *order, int LenOfOrder, char *Answer, int LenOfAnswer);
+    // Analysis ini file. Just give a pointer to init function.
+    typedef struct _INI_INFO_LIST {
+        _INI_INFO_LIST		*Next;
+        char				*Key;
+        char				*Value;
+    } IniInfo, *pIniInfo;
+    LEFT_ERROR AnalysisIniFile(char *path, pIniInfo *InfoHead);
+    LEFT_ERROR GetIniInfo(
+        const char *key, char *ValueBuf, int ValueLen, pIniInfo InfoHead);
+    LEFT_ERROR DelIniInfoList(pIniInfo infoList);
+    // Cut the str with interval character.
+    char *getNextOrder(char **buf, char *order, int Len, char SignChar);
+    LEFT_ERROR AddSign(const char *orderBuff, char *buff, char SignChar);
+    // Thread safe list class
+    class ThrSfeList {
+    public:
+        ThrSfeList();
+        ThrSfeList(char *buf, unsigned int len, LeftSimpleLock lock,
+            ThrSfeList *Last, ThrSfeList *Next);
+        ~ThrSfeList();
+        unsigned int		GetLast(char *buf, unsigned int len);
+        char				*GetBuf(char *buf, unsigned int len);
+        bool				Add(char *buf, unsigned int len);
+        unsigned int		len;
+    private:
+        LeftSimpleLock		lock;
+        char				*buf;
+        enum				character { Head, boddy, Tail };
+        character			role;
+        ThrSfeList			*Last;
+        ThrSfeList			*Next;
+    };
 }
 #endif
 /***************************************************************************************/
