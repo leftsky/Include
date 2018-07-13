@@ -1,7 +1,7 @@
 ﻿/* Copyright (c) left
 ** FileName:		WebSocket.cpp
-** Version:			2.0.1
-** Update time:		2017-12-24
+** Version:			2.1.0
+** Update time:		2018-07-11
 */
 
 #include "WebSocket.h"
@@ -16,6 +16,7 @@
 
 #include "sha1.h"
 #include "base64.h"
+#include "easylogging/easylogging++.h"
 
 namespace CCWebSocket {
 
@@ -68,19 +69,25 @@ namespace CCWebSocket {
         char *str, int strLen, char *answer, int answerLen) {
         if (strLen < 0) return NULL;
         memset(answer, 0, answerLen);
-        answer[strLen + 2 + 4 + 8 + 1] = '\0';
         unsigned int off = 0;
         answer[off] = (char)0x81;
         off++;
         if (strLen < 126)
+        {
             answer[off++] = strLen;
-        else if (strLen > 125 && strLen < 0xFFFF) {
-            answer[off++] = 126;
-            answer[off++] = (strLen & 0xFF00) / 0x10000;
-            answer[off++] = (strLen & 0xFF);
+            answer[strLen + 2 + 4 + 8 + 1] = '\0';
         }
-        else if (strLen > 0xFFFF)
+        else if (strLen > 125 && strLen < 0xFFFF) 
+        {
+            answer[off++] = 126;
+            answer[off++] = (strLen & 0xFF00) / 0x100;
+            answer[off++] = (strLen & 0xFF);
+            answer[strLen + 2 + 4 + 8 + 3] = '\0';
+        }
+        else if (strLen > 0xFFFF) 
+        {
             answer[off++] = 127;
+        }
         memcpy(answer + off, str, strLen);
         return answer;
     }
@@ -124,17 +131,21 @@ namespace CCWebSocket {
         if (skt.PaylodLen > bufLen || skt.Opcode != 1 || skt.FIN == false)
             return NULL;
         if (skt.Mask && skt.PaylodLen) {
+            LOG(INFO) << "Get Len : " << skt.PaylodLen;
             CCWebSocket::DecipheringStr(
                 buf + skt.wordOff, skt.PaylodLen, skt.Masking_key,
                 DecipheringStr, sizeof(DecipheringStr));
         }
         else if (!skt.Mask && skt.PaylodLen) {
             memset(DecipheringStr, 0, sizeof(DecipheringStr));
+            LOG(INFO) << "Get Len : " << skt.PaylodLen;
             memcpy(DecipheringStr, buf + skt.wordOff, skt.PaylodLen);
         }
         else
             return NULL;
-        snprintf(answer, answerLen, DecipheringStr);
+        //snprintf(answer, answerLen, DecipheringStr);
+        memcpy(answer, DecipheringStr, skt.PaylodLen <= answerLen ? skt.PaylodLen : answerLen);
+        answer[skt.PaylodLen < answerLen ? skt.PaylodLen : answerLen - 1] = '\0';
         return answer;
     }
 
